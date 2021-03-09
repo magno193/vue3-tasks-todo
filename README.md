@@ -1,4 +1,5 @@
-Installing the VUE CLI:
+# Starting the project
+→ Installing the VUE CLI:
 ```bash
 npm i -g @vue/cli
 ```
