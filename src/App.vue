@@ -38,20 +38,43 @@ export default {
     toggleAddTask() {
       this.showAddTask = !this.showAddTask;
     },
-    addTask(task) {
-      this.tasks = [...this.tasks, task];
+    async addTask(task) {
+      const res = await fetch('api/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(task),
+      });
+      const data = await res.json();
+      this.tasks = [...this.tasks, data];
     },
-    deleteTask(id) {
+    async deleteTask(id) {
       // eslint-disable-next-line no-restricted-globals
       const confirmation = confirm('Are you sure?');
-      console.log(confirmation);
       if (confirmation) {
-        this.tasks = this.tasks.filter((task) => task.id !== id);
+        const res = await fetch(`api/tasks/${id}`, {
+          method: 'DELETE',
+        });
+        // eslint-disable-next-line no-unused-expressions
+        res.status === 200
+          ? this.tasks = this.tasks.filter((task) => task.id !== id)
+          : alert('Error deletiing task');
       }
     },
-    toggleReminder(id) {
+    async toggleReminder(id) {
+      const taskToToggle = await this.fetchTask(id);
+      const updtdTask = { ...taskToToggle, reminder: !taskToToggle.reminder };
+      const res = await fetch(`api/tasks/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(updtdTask),
+      });
+      const data = await res.json();
       this.tasks = this.tasks.map((task) => (task.id === id
-        ? { ...task, reminder: !task.reminder }
+        ? { ...task, reminder: data.reminder }
         : task));
     },
     async fetchTasks() {
