@@ -9,3 +9,8 @@ npm i -g @vue/cli
 
 > **`vue create <project name>`**<br>
 > → To create a new VUE project
+
+## Routing
+```bash
+yarn add vue-router@next
+```
